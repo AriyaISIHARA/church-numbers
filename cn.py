@@ -1,20 +1,20 @@
 """Church Numbers"""
 
 
-ZERO = (lambda s: (lambda z: z))
-SUCC = (lambda n: (lambda s: (lambda z: s(n(s)(z)))))
-ADD = (lambda m: (lambda n: (lambda s: (lambda z: (m(s)(n(s)(z)))))))
-MUL = (lambda m: (lambda n: (lambda s: m(n(s)))))
-EXP = (lambda m: m)
-PRED = (lambda n: (lambda s: (lambda z: (n(lambda f: (lambda g: (g(f(s)))))(lambda u: z)(lambda u: u)))))
+ZERO = lambda s: lambda z: z
+SUCC = lambda n: lambda s: lambda z: s(n(s)(z))
+ADD = lambda m: lambda n: lambda s: lambda z: (m(s)(n(s)(z)))
+MUL = lambda m: lambda n: lambda s: m(n(s))
+EXP = lambda m: m
+PRED = lambda n: lambda s: lambda z: n(lambda f: lambda g: (g(f(s))))(lambda u: z)(lambda u: u)
 
-TRUE = (lambda x: (lambda y: x))
-FALSE = (lambda x: (lambda y: y))
-AND = (lambda p: (lambda q: p(q)(FALSE)))
-OR = (lambda p: (lambda q: p(TRUE)(q)))
-NOT = (lambda p: p(FALSE)(TRUE))
-COND = (lambda p: (lambda x: (lambda y: p(x)(y))))
-ISZERO = (lambda n: (n(lambda x: FALSE)(TRUE)))
+TRUE = lambda x: lambda y: x
+FALSE = lambda x: lambda y: y
+AND = lambda p: lambda q: p(q)(FALSE)
+OR = lambda p: lambda q: p(TRUE)(q)
+NOT = lambda p: p(FALSE)(TRUE)
+COND = lambda p: lambda x: lambda y: p(x)(y)
+ISZERO = lambda n: n(lambda x: FALSE)(TRUE)
 
 
 def rep(n):
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     print('three plus five:', sem(ADD(three)(five)))
     print('three times five:', sem(MUL(three)(five)))
     print('third power of five:', sem(EXP(three)(five)))
-    for i in range(5):
+    for i in range(3):
         print('predecessor of %d:' % i, sem(PRED(rep(i))))
 
     print('true and false:', semp(AND(TRUE)(FALSE)))
@@ -48,3 +48,7 @@ if __name__ == '__main__':
     print('not false:', semp(NOT(FALSE)))
     print('ZERO is zero:', semp(ISZERO(ZERO)))
     print('three is zero:', semp(ISZERO(three)))
+
+    Y = lambda f: (lambda x: f(lambda y: x(x)(y)))(lambda x: f(lambda y: x(x)(y)))
+    fact = lambda f: lambda x: x * f(x - 1) if x else 1
+    print('fact 5:', Y(fact)(5))
